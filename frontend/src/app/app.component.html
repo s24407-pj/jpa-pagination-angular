@@ -76,14 +76,10 @@
                             <li *ngFor="let pageNumber of [].constructor( state.appData.data.page.totalPages);let i = index;"
                                 [ngClass]="i==(currentPage$ | async) ? 'active': ''"
                                 class="page-item">
-                                <a (click)="goToPage('', i)" class="page-link" href="#">{{i + 1}}</a>
+                                <a (click)="goToPage(searchForm.value.name, i)" class="page-link" href="#">{{i + 1}}</a>
                             </li>
-                            <li [ngClass]="state.appData.data.page.totalPages-1==(currentPage$ | async) ? 'disabled': ''"
-                                class="page-item">
-                                <a (click)="goToNextOrPreviousPage('forward',searchForm.value.name)"
-                                   aria-disabled="true" aria-label="Next"
-                                   class="page-link pe-none" href="#"
-                                   tabindex="-1">
+                            <li class="page-item pointer" [ngClass]="(state.appData.data.page.totalPages - 1) == (currentPage$ | async) ? ' disabled' : ''">
+                                <a (click)="goToNextOrPreviousPage('forward', searchForm.value.name)" class="page-link" aria-label="Next">
                                     <span aria-hidden="true">&raquo;</span>
                                 </a>
                             </li>
