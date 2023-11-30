@@ -1,0 +1,97 @@
+<ng-container *ngIf="(usersState$ | async) as state" [ngSwitch]="state.appState">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container">
+            <a class="navbar-brand" href="#">Navbar</a>
+            <button aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"
+                    class="navbar-toggler" data-bs-target="#navbarSupportedContent"
+                    data-bs-toggle="collapse" type="button">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                    <li class="nav-item">
+                        <a aria-current="page" class="nav-link active" href="#">Home</a>
+                    </li>
+                </ul>
+                <form #searchForm="ngForm" (ngSubmit)="goToPage(searchForm.value.name)" class="d-flex" role="search">
+                    <input name="name" aria-label="Search" class="form-control me-2" placeholder="Search users"
+                           type="search" ngModel>
+                    <button class="btn btn-success" type="submit">Search</button>
+                </form>
+            </div>
+        </div>
+    </nav>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12 mt-3">
+                <ng-container *ngSwitchCase="'APP_ERROR'"><span style="color: red;">there was an error</span>
+                </ng-container>
+                <ng-container *ngSwitchCase="'APP_LOADING'">
+                    <div class="d-flex justify-content-center mt-4">
+                        <div class="spinner-border" role="status">
+                            <span class="visually-hidden">Loading...</span>
+                        </div>
+                    </div>
+                </ng-container>
+                <ng-container *ngSwitchCase="'APP_LOADED'">
+                    <h3>User list</h3>
+                    <table class="table table-striped">
+                        <thead>
+                        <tr>
+                            <th scope="col">ID</th>
+                            <th scope="col">Photo</th>
+                            <th scope="col">Name</th>
+                            <th scope="col">Email</th>
+                            <th scope="col">Phone</th>
+                            <th scope="col">Status</th>
+                            <th scope="col">Address</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+
+                        <tr *ngFor="let user of state.appData.data.page.content; let i = index;">
+                            <th scope="row">{{user.id}}</th>
+                            <td><img [alt]="user.name + ' photo'" [src]="user.imageUrl" class="rounded-circle"
+                                     height="42"
+                                     width="42"></td>
+                            <td>{{user.name}}</td>
+                            <td>{{user.email}}</td>
+                            <td>{{user.phone}}</td>
+                            <td>{{user.status}}</td>
+                            <td>{{user.address}}</td>
+                        </tr>
+                        </tbody>
+                    </table>
+
+                    <nav aria-label="Page navigation example">
+                        <ul class="pagination justify-content-end">
+                            <li [ngClass]="0==(currentPage$ | async) ? 'disabled': ''" class="page-item">
+                                <a (click)="goToNextOrPreviousPage('backward',searchForm.value.name)"
+                                   aria-label="Previous" class="page-link"
+                                   href="#">
+                                    <span aria-hidden="true">&laquo;</span>
+                                </a>
+                            </li>
+
+                            <li *ngFor="let pageNumber of [].constructor( state.appData.data.page.totalPages);let i = index;"
+                                [ngClass]="i==(currentPage$ | async) ? 'active': ''"
+                                class="page-item">
+                                <a (click)="goToPage('', i)" class="page-link" href="#">{{i + 1}}</a>
+                            </li>
+                            <li [ngClass]="state.appData.data.page.totalPages-1==(currentPage$ | async) ? 'disabled': ''"
+                                class="page-item">
+                                <a (click)="goToNextOrPreviousPage('forward',searchForm.value.name)"
+                                   aria-disabled="true" aria-label="Next"
+                                   class="page-link pe-none" href="#"
+                                   tabindex="-1">
+                                    <span aria-hidden="true">&raquo;</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </nav>
+                </ng-container>
+            </div>
+        </div>
+    </div>
+    <router-outlet></router-outlet>
+</ng-container>

@@ -1,0 +1,13 @@
+cors:
+  allowed-origins: "*"
+  allowed-methods: "*"
+  allowed-headers: "*"
+  exposed-headers: "*"
+spring:
+  datasource:
+    username: myuser
+    password: secret
+    url: jdbc:mysql://localhost:3305/mydatabase
+  jpa:
+    hibernate:
+      ddl-auto: update
